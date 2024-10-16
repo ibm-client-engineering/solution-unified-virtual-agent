@@ -1,0 +1,47 @@
+---
+title: GenAI Routing
+sidebar_position: 2
+description: sample page
+custom_edit_url: null
+---
+## Overview
+<div style={{ borderBottom: '1px solid #000', marginTop: '20px', marginBottom: '20px' }}></div>
+Leveraging generative AI to help classify user prompts as different groups can significantly improve the routing of conversations to the right actions 
+within an assistant builder.
+
+This approach not only streamlines the conversation routing process but also enhances the overall user experience by providing more accurate and relevant responses. 
+For example, if a user inputs "I need to reset my password," the system can classify the prompt as an "Action" intent and route the conversation to the relevant action or workflow. 
+Similarly, if a user inputs "What are the password policies?", the system can classify the prompt as a "Query" intent and route the conversation to the appropriate e-commerce action or workflow.
+
+## Solution Implementation
+<div style={{ borderBottom: '1px solid #000', marginTop: '20px', marginBottom: '20px' }}></div>
+
+### **Action vs. Query**
+Generative AI is leveraged within the Assistant to determine whether a user's request is an "Action", such as changing a password, or a request to
+"Query" a knowledge base for an answer.
+
+For example, if a user inputs "change my password," the system can classify the request as an "Acion" and route the conversation to the relevant action 
+or workflow. Similarly, if a user inputs "What are the different password policies?" the system will classify the request as a "Query" and route the 
+conversation to the appropriate knowledge base action or workflow, where the AI model can generate an accurate and relevant answer.
+
+By accurately determining the nature of a user's request, the system can provide more targeted and relevant responses, improving the overall user 
+experience. Additionally, generative AI can be used to generate tailored responses for each action type, ensuring that users receive accurate and 
+engaging information for both action requests and knowledge base queries.
+
+### **Financial vs. Non-Financial Query**
+Generative AI is leveraged within the Assistant to determine whether a user's query is related to financial reports or not. If the query is related
+to financial reports, the Large Language Model classifies the request as "Financial" and classifies the request as "None" if it is not financially related.
+
+For example, if a user inputs "How did the mortgage rates change from the previous year to the fourth quarter of 2023," the system will classify the request as "Financial" and route the conversation to the relevant action 
+or workflow to search against a finanical-focused corpus. Similarly, if a user inputs "What are the different password policies?" the system can classify the request as a "None" and route the 
+conversation to the appropriate knowledge base action or workflow where an AI model can generate an accurate and relevant answer.
+
+### **Individual Request vs. Request for another**
+Generative AI is leveraged within the Assistant to determine whether a user's query is for the individual or if the request is for others. If the query is for the individual
+user, the Large Language Model classifies the request as "Individual" and classifies the request as "Other" if it is request for another individual.
+
+For example, if a user inputs "I would like to change my password" the system will classify the request as "Individual" and route the conversation to the relevant action 
+or workflow. Similarly, if a user inputs "I would like to file a short-term disability claim for Robert" the system will classify the request as a "Other" and route the 
+conversation to the appropriate action or workflow to ensure the right users can carry out specific actions.
+
+[Implementation Guide Here](/Create/GenAI_routing_create)

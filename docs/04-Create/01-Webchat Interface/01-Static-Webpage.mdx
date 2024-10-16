@@ -1,0 +1,46 @@
+---
+title: Static-webpage
+sidebar_position: 1
+description: how to create static website for chatbot
+custom_edit_url: null
+---
+
+# Static Webpage Integration
+
+## Overview
+<div style={{ borderBottom: '1px solid #000', marginTop: '20px', marginBottom: '20px' }}></div>
+
+This doc will go through how to build an externally accessible webpage with the embedded assitant webchat for public access. This webpage is created using a static html script which is hosted within a Cloud Object Storage Bucket.
+
+**Software Requirements:**
+* IBM Cloud Object Storage - Lite
+* Watsonx Orchestrate or Watsonx Assistant
+
+## Build Walkthrough
+<div style={{ borderBottom: '1px solid #000', marginTop: '20px', marginBottom: '20px' }}></div>
+
+### Embed Assistant Webchat into HTML file
+1. Within the Assitant Builder's sidebar, navigate to the "Integrations" section
+2. Under the "Essential channels" section select "Open" within the "Webchat" channel
+3. Select the appropriate environment and navigate to the "Embed" tab
+4. Copy the provided script and insert into html script
+5. Optional : Add ```showRestartButton: true``` after ```window.watsonAssistantChatOptions ={}``` to display web-chat restart button
+
+### Create Cloud Object Storage (COS) Instance
+1. Go to the dedicated IBM Cloud Account "Resource" List [here](https://cloud.ibm.com/resources) and click "Create Resource +"
+2. Search and select "Object Storage"
+3. Select "IBM Cloud" as the infrastructure and the appropriate pricing plan
+4. Name the service and click "Create"
+
+### Create a Custom COS Bucket
+1. From the "Resource" List select the newly created COS instance
+2. Click "Create a Custom Bucket"
+3. Enter a valid bucket name and select the appropriate values for "Resiliency", "Location", "Storage class", "Object Versioning" and "Immutablity"
+4. Within the section "Advanced configurations (optional)" click the "Add +" for "Static website hosting"
+    <img src="https://media.github.ibm.com/user/386696/files/4aad2214-1dac-445e-9d9d-9440ab2e18f8" alt="COS Static website" width="600"/>
+5. Ensure the "Public access" toggle is switched to "On"
+6. Enter the name of the target html file which will be used to build the desired web app
+7. Click "Save" and then click "Create bucket"
+
+### **Upload HTML file**
+1. Upload the HTML file from [here](#embed-assistant-webchat-into-html-file)

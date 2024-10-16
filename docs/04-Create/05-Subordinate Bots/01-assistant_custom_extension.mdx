@@ -1,0 +1,96 @@
+---
+title: Assistant Custom Extension
+sidebar_position: 1
+description: How to setup a bot-to-bot integration with another watsonx assistant
+custom_edit_url: null
+---
+
+# watsonx Assistant Subordinate Bot
+
+This section will describe how we were able to query one watsonx assistant from another using the watsonx assistant API. In addition, this guide will also include information about how to update session variables on the subordinate bot from the calling bot.
+There are two different ways to integrate with a subordinate watsonx assisant bot:
+1. [Assistant Custom Extension](#assistant-custom-extension)
+2. [Watsonx Orchestrate Skill](#watsonx-orchestrate-skill)
+
+## Assistant Custom Extension
+<div style={{ borderBottom: '1px solid #000', marginTop: '20px', marginBottom: '20px' }}></div>
+
+### Generate API Key
+1. Navigate to the subordinate bot instance
+2. In the sidebar, navigate to "Assistant Settings"
+3. Under "Assistant IDs and API details", select "Generate API key" and save it for later 
+
+### Identify OpenAPI spec values
+Two values will be needed to connect to a subordinate Assistant:
+* service instance url
+* environmentID
+
+1. Within the Assistant Builder's sidebar, navigate to the "Assistant Settings"
+2. Under "Assistant IDs and API details", select "View details"
+3. Save/copy the values for:
+    * ```service instance URL```
+    * ```Draft/Live Environment ID``` (whichever is applicable)
+
+### Create the Custom Extension
+1. Navigate and download the OpenAPI spec for another assistant bot [here](https://github.ibm.com/ibm-client-engineering/solution-watsonx-orchestrate/tree/main/assets/openAPI_specs/otherBot)
+2. Modify the server url at line 10 with the ```service instance url``` from step 3 [here](#identify-openapi-spec-values)
+3. Navigate to the integrations section within the Assistant Builder sidebar
+4. Select "Build custom extension" and name the extension
+5. Upload the OpenApi spec from step 1 and press "Finish"
+6. Select "Add+" within the newly configured extension
+7. Select "Next" and update values:
+    * Authentication type: Basic auth
+    * Username: apikey
+    * Password: Password from [here](#create-an-ibm-cloud-api-key)
+
+
+### Action Integration
+Two api calls are needed to successfully integrate this extension:
+1. [Create a session id for the subordinate bot](#create-a-session-id)
+2. [Make a dialog request to the subordinate bot](#make-a-dialog-request)
+
+#### **Create a session id**
+1. Within the appropriate action, create a step and under "And then" select "Use an extension"
+2. Select the appropriate subordinate bot extension made [here](#assistant-custom-extension)
+3. Select the Operation as "Create Session"
+4. Set the Parameters to:
+    * **environment_id**: Environment ID from step 3 of [Identify OpenAPI spec values](#identify-openapi-spec-values)
+
+#### **Make a dialog request**
+1. Create a new step after the action with the "create a session" extension  
+2. Under the "And then" Section, select "Use an extension"
+2. Select the appropriate subordinate bot extension made [here](#assistant-custom-extension)
+3. Select the Operation as "Make dialog request"
+4. Set the Parameters to:
+    * **input.text**: input.text
+    * **input.message_type**: text
+    * **useContext.skills.actions skill.skill_variables** : ```{"DEFINED_VARIABLE" : "VARIABLE_VALUE"}```
+    * **session_id**: [session_id from previous step w/ "Create Session" call]
+    * **environment_id**: Environment ID from step 3 of [Identify OpenAPI spec values](#identify-openapi-spec-values)
+
+
+#### **A note about session variables**
+Session variables are an important tool for storing information within and between watsonx assistant actions. They are defined either by the user or by the assistant, and each session has a unique instance of each session variable.
+
+If you need to pass more information than just the input query to the subordinate bot, a session variable is the way to go. To do this, the session variable must already be defined on the subordinate side before its value can be updated by a dialog request. Once the variable is defined, it can be updated by including its name along with a new value in a json object under the **useContext.skills.actions skill.skill_variables** field.
+
+## Watsonx Orchestrate Skill
+<div style={{ borderBottom: '1px solid #000', marginTop: '20px', marginBottom: '20px' }}></div>
+This section will cover how the bot-bot communication OpenAPI spec was adapted for use by watsonx orchestrate. The example file can be found [here](https://github.ibm.com/ibm-client-engineering/solution-watsonx-orchestrate/tree/main/assets/openAPI_specs/otherBot/wxo_otherBot_v2_OAS.yaml). The setup instructions for the specification itself are the same as for the watsonx assistant spec.
+
+### Changes made
+Of the significant changes made to the specification, there was one functional change and one more cosmetic change.
+
+The functional change was to specify in the specification the session variable that will be changed by the watsonx orchestrate skill. For whatever reason, watsonx orchestrate cannot take arbitrary expressions such as a json object as inputs. As a workaround, the session variables must be explicity defined in the specification. Because I was feeling whimsical when I made this, the example session variable is named "jellybelly".
+
+The other change was to give all of the inputs default values in order to be able to hide the input forms that would otherwise appear in the watsonx orchestrate chat. This will not, however, allow you to hide the forms when the skill is imported into watsonx assistant. Unfortunately, those forms cannot be hidden.
+
+Another minor change is that the second step, sending the dialog request, is given an output format using the watsonx orchestrate tag "x-ibm-nl-output-template". This allows the user to forgo the very ugly table that shows up by default, although this can also be done through the watsonx orchestrate UI.
+
+### Setup
+
+In order to build a skill flow from this [OpenAPI specification](https://github.ibm.com/ibm-client-engineering/solution-watsonx-orchestrate/blob/main/assets/openAPI_specs/otherBot/wxo_otherBot_v2_OAS.yaml), import the spec and setup the authorization in the same that you would for watsonx assistant. Then follow these steps:
+1. Click "Enhance this skill" for both skills in order to publish them.
+2. Click the dropdown next to "Add Skills" and select "Create a skill flow"
+3. Arrange the two skills you just imported into the skill flow, with the first skill being the "Create Session" skill and the second being "Make a dialog request w required"
+4. Complete the inputs for the two skills, and select "hide this form from the user" if you would like to not show the form when running the skill flow. make sure that the "input.message_type" is set to "text" for the second skill.

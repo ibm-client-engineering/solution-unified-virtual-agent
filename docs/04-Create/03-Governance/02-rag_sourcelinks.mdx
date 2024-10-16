@@ -1,0 +1,77 @@
+---
+title: RAG Source Links
+sidebar_position: 2
+description: How to setup document source links for RAG
+custom_edit_url: null
+---
+
+## Overview
+:::warning
+    Prerequisite: [watsonx Orchestrate Software Requirement](/Prepare/Requirements#web-chat-interface)
+:::
+
+This section will go over how to add source links for files within an Assistant. Though there are different methods in which source links can be created, this 
+document will cover these methods:
+- Access via COS (Cloud Object Storage)
+
+### Access via COS (Cloud Object Storage)
+1. In the appropriate Cloud Object Storage instance create a new "Custom Bucket"
+2. Within the new bucket, navigate to the "Permissions" tab
+3. Within the "Public Access" Section select "Content Reader" as the "Role for this bucket"
+4. Select "Create access policy" to enable public access for the bucket
+5. Upload the necessary documents which will be the source for the dedicated RAG Document Search
+    :::note
+        Ensure the name of the sources are the same as the sources in the target data courpus/source (ie. COS, Watson Discovery, etc.)
+    :::
+
+## Assistant Integration
+:::warning
+**Prerequisites**: Ensure the necessary documents have been uploaded to the appropriate COS buckets [here: Access via COS](#access-via-cos-cloud-object-storage)
+:::
+
+### Extract Source Links' Base Url
+1. Navigate to the COS bucket with all the designated source links for the RAG Document Search functionality.
+2. On any of the documents click the three dots to the left and find the "Object public url". May require to refresh the page if "Object public url" is not there.
+3. Within the url extract and copy the first part of the link up till the first "/" (ex. "https://[domain].s3.us-south.cloud-object-storage.appdomain.cloud")
+
+### Configure to existing metadata
+
+There are two ways to retrieve source links from RAG Document Search demonstrated in these docs:
+- Watson Discovery
+- Watsonx Discovery
+
+#### **Watsonx Discovery**
+1. Within the appropriate Assistant step concatenante the link value from step 3 to the RAG Document Search metatdata source url
+2. Create source link variable with the expression value of:
+
+    ``` "[BASE URL LINK]" + ${step_[x]_result_1}.body.references[y].metadata.file_name ```
+
+    :::note
+        - Replace "x" with the appropriate step number of the result of the watsonx discovery extension
+        - Replace "y" with either 0-3 to reference source file_name 1-3
+    :::
+
+    *Reference Example:*
+
+     ``` "https://examplebucket.s3.us-south.cloud-object-storage.appdomain.cloud/" + ${step_001_result_1.body.references[0].file_name} ```
+
+3. Optional: Insert source link variable in output for click=able links
+
+    ``` For more information click <a href="[source_url session variable from step 2]" target="blank">here</a> ```
+
+#### **Watson Discovery**
+1. Within the appropriate Assistant step concatenante the link value from step 3 to the RAG Document Search metatdata source url
+2. Create source link variable with the expression value of:
+
+    ``` "[BASE URL LINK]" + ${step_[x]_result_2}.body.results[0].metadata.source.url ```
+
+    :::note
+        - Replace "x" with the appropriate step number of the result of the watsonx discovery extension or choose from the appropriate step variables
+    :::
+
+    *Reference Example:*
+
+     ``` "https://examplebucket.s3.us-south.cloud-object-storage.appdomain.cloud/" + ${step_001_result_2}.body.results[0].metatdata.source.url ```
+3. Optional: Insert source link variable in output for click=able links
+
+    ``` For more information click <a href="[source_url session variable from step 2]" target="blank">here</a> ```

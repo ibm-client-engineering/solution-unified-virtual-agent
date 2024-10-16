@@ -1,0 +1,33 @@
+---
+title: RAG Document Search
+sidebar_position: 3
+description: sample page
+custom_edit_url: null
+---
+## Overview
+<div style={{ borderBottom: '1px solid #000', marginTop: '20px', marginBottom: '20px' }}></div>
+
+By leveraging a RAG pipeline to help users query a given knowledge base corpus, the Assistant can provide a more reliable and accurate knowledge base search experience. 
+This not only enhances the overall user experience but also ensures that users receive the most relevant and up-to-date information possible by providing source links to the provided answers.
+
+A RAG pipeline for Document Search usually consists of a Data Repository, a Vector Database and a Large Language Model. This pipeline can be carried out as one of three patterns.
+
+## Solution Implementation
+<div style={{ borderBottom: '1px solid #000', marginTop: '20px', marginBottom: '20px' }}></div>
+
+### **Method 1: Watson Discovery**
+
+This pattern consists of creating two integrations with Watson Discovery and Watsonx.ai. Watson Discovery is used to store and carry out searches on data collections. The native native search capability to pass relevant passages into an LLM prompt template to generate an answer to a user's query. 
+
+**Required Integrations:**
+* Watson Discovery
+* Watsonx.ai
+
+![RAG Method 1](https://media.github.ibm.com/user/386696/files/e5296158-ada0-4aa8-beee-d9b1d47b6ab6)
+
+[Implementation Guide Here](/Create/RAG%20Document%20Search/Watson_Discovery)
+### **Method 2: Watsonx Discovery with Elasticsearch**
+
+![RAG Method 2](https://media.github.ibm.com/user/386696/files/635e8b89-32f7-4899-9284-86d376e54d9e)
+
+[Implementation Guide Here](/Create/RAG%20Document%20Search/Watsonx_Discovery)

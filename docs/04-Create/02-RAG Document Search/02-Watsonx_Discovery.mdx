@@ -1,0 +1,278 @@
+---
+title: Watsonx Discovery
+sidebar_position: 2
+description: How to setup RAG with Watsonx Discovery
+custom_edit_url: null
+---
+
+# Watsonx Discovery
+:::warning
+    Prerequisite: [Watsonx Disovery Software Requirement](/Prepare/Requirements#watsonx-discovery)
+:::
+
+## Build setup
+<div
+  style={{
+    borderBottom: "1px solid #000",
+    marginTop: "20px",
+    marginBottom: "20px",
+  }}
+></div>
+
+Navigate to this [github](https://github.ibm.com/skol-assets/watsonx-RAG-w-watsonxdiscovery-method2/) 
+and download [this project file](https://github.ibm.com/skol-assets/watsonx-RAG-w-watsonxdiscovery-method2/blob/main/project/WatsonStudioProjectTemplate.zip)
+
+
+## Build Walkthrough
+
+<div
+  style={{
+    borderBottom: "1px solid #000",
+    marginTop: "20px",
+    marginBottom: "20px",
+  }}
+></div>
+
+### **Create Elasticsearch Resource**
+
+Make sure to select the Platinum version with native ELSIR model, and be mindful of the RAM allocation. 
+
+:::note
+We ran into issues with extremely high RAM usage and unreliability, so we provisioned an instance of Elasticsearch with 64GB of RAM, 100GB of storage, and 16 cores. This was probably overkill, and the RAM usage was still over 80%, but we didn't have the same issues with Elasticsearch again. We weren't exactly sure why this was happening, as our largest index was about 6000 documents and 56.2 MB. 
+:::
+
+### **Create Watson Machine Learning Deployment Space**
+
+1. Navigate to the Deployments section of Watson Studio.
+2. Create a new deployment space.
+   - The storage service should automatically be assigned to your Cloud Object Storage service.
+   - Assign your Watson Machine Learning service to the Machine Learning Service.
+   Once the deployment space is created, navigate to the space's Manage tab and copy the Space GUID.
+
+### **Upload Documents to COS Bucket**
+1. Navigate to the appropriate "Cloud Object Storage" resource and select "Create Bucket"
+2. Select "Create a Custom Bucket" and fill out the necessary fields and press "Create"
+3. Upload the relevant documents
+4. Create a "Content Reader" credential for the Cloud Object Storage resource
+
+### **Create an IBM Cloud API Key**
+
+Create an IBM Cloud API key in IBM Cloud [here](https://cloud.ibm.com/iam/apikeys) and save it.
+
+### **Create the Watson Studio Project**
+
+1. Download the "WatsonStudioProjectTemplate.zip"[here](https://github.ibm.com/skol-assets/watsonx-RAG-w-watsonxdiscovery-method2/tree/main/project).
+2. Navigate to the Projects section of Watson Studio and change the context from "Watson Studio" to "watsonx". You can change the context in the top right corner of the UI.
+3. Select `New Project` -> `Create a new project from a sample or file` and upload the zip file from [the "Build Setup"](#build-setup)
+
+#### Assiciate WML instance
+
+1. Navigate to the "`Manage` Tab and Select `Associate service +` and select the appropriate WML instance
+
+#### **Populate Parameter Set**
+
+1. Click on the `Notebook_and_Deployment_Parameters` parameter set in the project.
+2. Set the `wml_space_id` and `ibm_cloud_apikey` to the Space GUID and IBM Cloud API key, respectively.
+
+#### **Complete Connection to Databases for Elasticsearch**
+
+1. Click on the `WatsonxDiscovery` connection in the project.
+2. In a separate tab, navigate to the Databases for Elasticsearch service on IBM Cloud.
+3. Within the `Overview` tab scroll down to the `Endpoints` section and select the `HTTPS` tab.
+4. Copy the **hostname**, **port**, and **TLS certificate**.
+5. Go to the service credentials tab of the service and create a `New Credential`.
+6. Copy the username and password under `connection.https.authentication` in the new service credential JSON.
+7. Return to the Watson Studio project's `WatsonxDiscovery` connection and set the following fields:
+   - Edit the URL with the saved values for the `HOSTNAME` and `PORT` with the format of `https://{HOSTNAME}:{PORT}`.
+   - The username and password should be the ones copied from the service credentials.
+   - The SSL certificate should be the TLS certificate.
+8. Select `Test connection` in the top right corner to validate a working connection.
+
+#### **Complete Connection to Databases for Elasticsearch**
+1. Click on the `CloudObjectStorage` connection in the project.
+2. Set the bucket name to the name of the bucket created in the ["Add Documents to Cloud Object Storage" step](#add-documents-to-cloud-object-storage).
+3. In the configuration tab of the bucket in Cloud Object Storage, copy the public endpoint to the Login URL field. 
+5. Paste the Cloud Object Storage service credential you created earlier into the "Service credentials" field.
+6. Test the connection by clicking the "Test connection" button. The test should be successful.
+
+### **Run Notebooks**
+
+Once the setup is complete, the notebooks in the project can be run without errors. For each of the notebooks, make sure to insert the project token via the top-right menu in the notebook UI before running any cells. This creates a cell that connects your notebook to the project and its assets.
+
+Steps:
+
+1. Ingest documents into Elasticsearch via COS or Watson Discovery
+2. Deploy RAG function
+
+---
+
+#### **Watson Discovery: Ingest Documents to Elasticsearch**
+
+The `1-file-ingestion-from-dis` notebook in the project handles document ingestion from Watson Discovery for Elasticsearch.
+
+1. Update Project ID and Project Token Values:
+
+   - Navigate to the "Manage" Tab of the watson Studio project and copy the "Project ID" to be used in the notebook.
+   - Navigate to the "Access control" and copy the existing token to be used in the notebook.
+
+2. Install the necessary python libraries:
+   :::note
+   Only need too install python libs on the first run of the notebook
+   :::
+
+   Insert new cell and run
+
+   ```shell
+   !pip install nltk --quiet
+   !pip install ibm_watson --quiet
+   !pip install elasticsearch --quiet
+   !pip install llama-index --quiet
+   !pip install llama_index.vector_stores.elasticsearch --quiet
+   ```
+
+3. Update the Watson Discovery credentials
+   1. On the IBM Cloud resource list select the "Watson Discovery" instance
+   2. On the "Manage" under "Overview" copy the "API Key" and "URL" value
+   3. Click "Launch Discovery" -> "Select the relevant Project" -> "Manage Collections" -> click relevanty collection
+   4. Grab the Collection ID from the url after "/collection/"
+   5. Under the "Integrate and Deploy" section copy the "Project ID"
+
+---
+
+#### **COS: Ingest Documents to Elasticsearch**
+
+The `1-file-ingestion-from-cos` notebook in the project handles document ingestion from Watson Discovery for Elasticsearch.
+
+1. Update Project ID and Project Token Values:
+
+   - Navigate to the "Manage" Tab of the watson Studio project and copy the "Project ID" to be used in the notebook.
+   - Navigate to the "Access control" and copy the existing token to be used in the notebook.
+
+2. Install the necessary python libraries:
+   :::note
+   Only need too install python libs on the first run of the notebook
+   :::
+   Insert new cell and run
+   ```
+   !pip install nltk --quiet
+   !pip install ibm_watson --quiet
+   !pip install elasticsearch --quiet
+   !pip install llama-index --quiet
+   !pip install llama_index.vector_stores.elasticsearch --quiet
+   ```
+3. Update the COS credentials
+4. Create a new `index_name` for each new collection of data (if applicable)
+
+---
+
+#### **Deploy RAG Function in Watson Machine Learning**
+
+The `2-deploy-rag-function-in-wml` notebook in the project handles the deployment of a Python function that performs RAG using the Databases for Elasticsearch database and watsonx.ai. This step is not necessary if you plan to use the native search integration in watsonx Assistant. Optionally, you can test your deployment using the third notebook `3-test-rag-deployment` in the project. This notebook calls the deployment endpoint and reformats the deployment responses for better readability.
+
+1. Update Project ID and Project Token Values
+
+   - Navigate to the "Manage" Tab of the watson Studio project and copy the "Project ID" to be used in the notebook.
+   - Navigate to the "Access control" and copy the existing token to be used in the notebook.
+
+2. Install the following libraries:
+
+   ````shell
+       !pip install nltk --quiet
+       !pip install ibm_watson --quiet
+       !pip install elasticsearch --quiet
+       !pip install llama-index --quiet
+       !pip install llama_index.vector_stores.elasticsearch --quiet
+       ```
+
+   ````
+
+3. Deploy seperate functions for each index created
+   :::tip
+   Note down the `deployment_id` for each function for each index to be leveraged for the Assistant integration
+   :::
+
+4. Run cell under "Update project assets" to generate the OpenApi Spec for assistant integrations (if applicable)
+
+---
+
+### **Assistant Integration**
+
+Watsonx Assistant provides the query interface, using either:
+
+- [Custom Extension for RAG Deploment Configuration](#deploy-rag-function-in-watson-machine-learning)
+  :::tip
+  Useful for routing queries/requests to different collections of data
+  :::
+- Native Extension.
+  - The assets for setting up watsonx Assistant are located in the [assistant folder](./assistant/) of this repository, and are also included in the Watson Studio project for convenience.
+
+#### **Custom Extension**
+
+1. Within the Assistant Builder's sidebar navigate to the "Integrations" section and
+2. Select "Build custom extension"
+3. Upload the OpenApi spec from step 4 of [RAG Deploment Extension Configuration](#deploy-rag-function-in-watson-machine-learning) and press "Finish"
+4. Select "Add+" within the newly configured extension
+5. Select "Next" -> "Authentication type: OAuth 2.0"
+6. Enter the API Key value from [here](#create-an-ibm-cloud-api-key)
+
+#### **Native Extension**
+
+To configure watsonx Assistant to use the native search extension, follow these steps:
+
+1. In the integrations tab on the bottom left of the watsonx Assistant user interface, select the search extension and then Elasticsearch.
+2. Use the Databases for Elasticsearch credentials obtained in the [Complete Connection to Databases For Elasticsearch section](#complete-connection-to-databases-for-elasticsearch) to fill out the next page.
+   - Note that "https://" should be appended before the hostname obtained from the Elasticsearch credentials.
+   - The index name should be the `es_index_name` from your project's parameter set.
+3. In the "Configure result content" section, set the Title to `file_name`, Body to `text_field`, and URL to `url`. If you modified your `es_index_text_field` in your static notebooks parameters, the body should be set to the modified value.
+4. Under "Advanced Elasticsearch settings", set the query body to
+
+```json
+{
+  "sort": [
+    {
+      "_score": "desc"
+    }
+  ],
+  "query": {
+    "text_expansion": {
+      "ml.tokens": {
+        "model_id": ".elser_model_1",
+        "model_text": "$QUERY$"
+      }
+    }
+  }
+}
+```
+
+5. Enable conversational search and save the extension. Conversational search is a beta feature that you need to request access for [here](https://form.asana.com/?k=U0gIIpwhM2_LY8r8LC_qDw&d=8612789739828).
+
+Once you have finished configuring the search extension, configure the assistant's actions as follows:
+
+6. In the "No action matches" action, set the assistant "Search for the answer".
+7. Save your action and navigate to the preview tab. Your assistant is now configured. Test it out by passing in natural language queries regarding your document collection.
+
+Please refer to [the official documentation](https://cloud.ibm.com/docs/watson-assistant?topic=watson-assistant-search-elasticsearch-add) for more information on using the native search extension.
+
+### **Assistant Integration Utility**
+
+:::warning
+Dependent Steps: [Assistant Integration](#assistant-integration)
+:::
+
+#### **Assistant Action Integrationn**
+
+1. Within the appropriate action step select "And then" option as "Use an extension" and select the appropriate Watsonx Discovery extension
+2. For "Operation" select "Get the predications"
+3. For the "Parameters" set:
+   - input_data: Expression type as `[{"fields": ["Text"],"values": [[input.text]]}]`
+   - wml_deploment_id": deployment_id from step 3 of [Custom Extension for RAG Deploment Configuration](#deploy-rag-function-in-watson-machine-learning)
+
+#### **Extract WxD Values to User**
+
+llm_response value:
+
+`${[APPROPRIATE_STEP]_result_1.body.predictions[0].llm_response}`
+
+Source links:
+
+`${[APPROPRIATE_STEP]_result_1.body.references[VALUE].metadata.file_name}`
