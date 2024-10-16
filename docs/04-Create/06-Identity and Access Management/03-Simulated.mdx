@@ -1,0 +1,64 @@
+---
+title: Simulated
+sidebar_position: 2
+description: How to setup a simulated user authentication process
+custom_edit_url: null
+---
+## Overview
+
+This section will go through how to simulate User and Access Management for an Assistant. The steps consist of: 
+
+1. Create a variable assigned to an expression of a dictionary within the assistant platfrom and include the necessary users and their appropriate metadata within the dictionary.
+2. Modify the "Greet Customer" action within the assistant
+
+### Variable Creation
+1. Within the "Actions" section of the Assistant navigate to the "Created by you" variables and select "New Variable+"
+2. Create a variable name and set variable type to "Any"
+3. Update the "initial value":
+    - Toggle the "Use Expression" to on
+    - Create dictionary value:
+        
+        ex)
+        ```
+        [
+            {
+                "name":"martha",
+                "password":"MARTHA",
+                "access":"Admin",
+                "role":"Manager"
+            },
+            {
+                "name":"robert",
+                "password":"ROBERT",
+                "access":"Employee",
+                "role":"Employee"
+            }
+        ]
+        ```
+4. Click "Save"
+
+### Modify "Greet Customer" action
+- Within the "Actions" section of the Assistant, navigate to the "Greet Customer" action
+
+#### **Authenticate User**
+1. Check valid user by setting a new boolean variable to an expression value of:
+
+    ``` !(( [users variable from "Variable Creation" step above]).filter("user", "user.name ==  [current_user value]")).isEmpty()) ```
+
+    Example)
+    <img src="https://media.github.ibm.com/user/386696/files/0ef0a124-c844-489c-aa12-c478734b5ce5" alt="Valid User Assistant Example" width="500"/>
+
+
+2. Ensure valid password by creating conditional statement with expression value of :
+
+    ``` [current_password value] == (users.filter("user", "user.name == [current_user value]"))[0].password  ```
+
+    Example)
+    <img src="https://media.github.ibm.com/user/386696/files/30d212c3-063e-43e9-ad90-abc933f35e52" alt="Valid Password Assistant Example" width="600"/>
+
+#### **Change User's Password**
+1. Set a new password for the current user with an expression like:
+    ```((( ${users}.filter(\"user\", \"user.name ==  ${current_user} \"))[0]).password) = ${new_pass}```
+2. Validate changed password with:
+    ```((( ${users}.filter(\"user\", \"user.name ==  ${current_user} \"))[0]).password) ```
+

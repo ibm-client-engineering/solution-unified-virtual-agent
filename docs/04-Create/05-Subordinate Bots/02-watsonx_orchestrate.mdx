@@ -1,0 +1,26 @@
+---
+title: watsonx Orchestrate Skill Flow
+sidebar_position: 2
+description: Implementing bot communication on watsonx orchestrate
+custom_edit_url: null
+---
+
+## Overview
+This section will cover how the bot-bot communication OpenAPI spec was adapted for use by watsonx orchestrate. The example file can be found [here](https://github.ibm.com/ibm-client-engineering/solution-watsonx-orchestrate/tree/main/assets/openAPI_specs/otherBot/wxo_otherBot_v2_OAS.yaml). The setup instructions for the specification itself are the same as for the watsonx assistant spec.
+
+### Changes made
+Of the significant changes made to the specification, there was one functional change and one more cosmetic change.
+
+The functional change was to specify in the specification the session variable that will be changed by the watsonx orchestrate skill. For whatever reason, watsonx orchestrate cannot take arbitrary expressions such as a json object as inputs. As a workaround, the session variables must be explicity defined in the specification. Because I was feeling whimsical when I made this, the example session variable is named "jellybelly".
+
+The other change was to give all of the inputs default values in order to be able to hide the input forms that would otherwise appear in the watsonx orchestrate chat. This will not, however, allow you to hide the forms when the skill is imported into watsonx assistant. Unfortunately, those forms cannot be hidden.
+
+Another minor change is that the second step, sending the dialog request, is given an output format using the watsonx orchestrate tag "x-ibm-nl-output-template". This allows the user to forgo the very ugly table that shows up by default, although this can also be done through the watsonx orchestrate UI.
+
+### Setup
+
+In order to build a skill flow from this [OpenAPI specification](https://github.ibm.com/ibm-client-engineering/solution-watsonx-orchestrate/blob/main/assets/openAPI_specs/otherBot/wxo_otherBot_v2_OAS.yaml), import the spec and setup the authorization in the same that you would for watsonx assistant. Then follow these steps:
+1. Click "Enhance this skill" for both skills in order to publish them.
+2. Click the dropdown next to "Add Skills" and select "Create a skill flow"
+3. Arrange the two skills you just imported into the skill flow, with the first skill being the "Create Session" skill and the second being "Make a dialog request w required"
+4. Complete the inputs for the two skills, and select "hide this form from the user" if you would like to not show the form when running the skill flow. make sure that the "input.message_type" is set to "text" for the second skill.

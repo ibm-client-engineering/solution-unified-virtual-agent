@@ -1,0 +1,31 @@
+---
+title: GenAI Routing
+sidebar_position: 1
+description: How to setup the necessary components for genAI routing
+custom_edit_url: null
+---
+
+## Overview
+This documentation walks through how to leverage generative AI to route a user's request to the most appropriate action/workflow or perform RAG on the most relevant data corpuses. This generative AI routing can be carried out by one of two methods.
+- watsonx.ai
+- watsonx.gov
+
+### watsonx.ai
+#### **Create watsonx.ai custom extension**
+1.  In your assistant, navigate to Integrations page, click "Build custom extension" -> click "Next" -> Input Extension name `watsonx` -> click "Next" .
+2. download json file: [watsonx-openapi.json](https://github.com/watson-developer-cloud/assistant-toolkit/blob/master/integrations/extensions/starter-kits/language-model-watsonx/watsonx-openapi.json) and import file to WA
+3. click "Next" -> click "Finish"
+4. Lower Right corner of the watsonx extension, click "Add" -> click "Add" -> click "Next"
+5. In Authentication page, in the Authentication type dropdown, select "OAuth 2.0"
+    1. For Apikey, create and copy a new API key from [API key](https://cloud.ibm.com/iam/apikeys)
+6. Click "Next", click "Finish", click "Close"
+
+#### **Action configuration**
+1. Create a new action leveraging the extension created above
+2. Configure the model parameters to the appropriate values for the desired use case
+
+
+### watsonx.gov Walkthrough
+Follow the instructions from [here](/Create/Governance/watsonx_gov#create-custom-extension)
+
+

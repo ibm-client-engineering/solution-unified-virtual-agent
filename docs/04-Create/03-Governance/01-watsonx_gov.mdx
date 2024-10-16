@@ -1,0 +1,72 @@
+---
+title: watsonx.gov
+sidebar_position: 1
+description: How to configure watsonx.gov
+custom_edit_url: null
+---
+
+## Overview
+:::warning
+    Prerequisite: [watsonx.gov Software Requirement](/Prepare/Requirements#governance)
+:::
+
+This portion of the Create tab will walk you through how to create and integrate the watsonx.gov platform with the Orchestrate solutions. That way, you can monitor, track, and update your models in real-time and before deployment. To check out how watsonx.gov adds to the Business Value of this particular use case, visit the 
+[Business Use Case](/Business%20Overview/Use%20Cases/Governance#overview) tab.
+
+---
+
+## Steps to Track Models in the watsonx.gov Platform
+
+1. Save your Prompt Lab as a Prompt Template.
+2. Within the project underneath _Assets_, click on the vertical 3 dots --> "Go to AI Factsheet" button.
+3. Once your in your AI Factsheet, make sure to click "Track in AI use case" which will allow you to track the model's lifecycle from development to deployment.
+   - If you have not created an AI Use Case yet, please do so in order to track this model in your AI Use Case.
+4. Now, back in your project underneath _Assets_, please click on the vertical 3 dots again --> "Promote to space" button.
+   - If you do not have a deployment space created yet, please create one on the main watsonx.ai homepage in order to hold all the deployed models that you create.
+     - OPTIONAL: It might be beneficial to create a Pre-Production and a Post-Production deployment for the same model. This is beneficial because at different stages of deployments, there are different metrics unlocked in order to showcase the attributes of the model.
+5. Now in the Deployment Space underneath the _Assets_ tab, click again on the vertical 3 dots --> "Deploy" button.
+6. Once you have deployed, the page will bring you to all of your _Deployments_, click into the model that you would like to Evaluate. Next, click on the header "Evaluations" then click the "Evaluate" button. At this point, it is now time to evaluate your models under the _Evaluate_ tab, but a pre-requisite is to have some sort of feedback dataset with pre-generated inputs and outputs of what you want your model to spit out in an ideal situation. That way, the model can then evaluate its results against this dataset.
+   - If you do not have this dataset, an easy way to create it is to utilize LLMs to create synthetic data. Or you can utilize one that we have provided for you:
+     - [query_actions_feedback.csv](../../../assets/governance_assets/query_actions_feedback.csv)
+     - [IndividualvsOther_feedback.csv](../../../assets/governance_assets/IndividualVsOther.csv)
+     - [IndividualvsOther_self_feedback.csv](../../../assets/governance_assets/IndividualVsOther_self.csv)
+     - [financialVsOther_ground_truth_feedback.csv](../../../assets/governance_assets/financialVsOther_ground_truth.csv)
+     - [Extract_references.csv](../../../assets/governance_assets/Extract_references.csv)
+7. Once you have your feedback dataset, once you have clicked the "Evaluate" button, under the header "Select text data," upload your feedback dataset.
+8. The model will likely take a few minutes to evaluate, but once it has, in the _Actions_ tab, feel free to adjust parameters depending on what you feel your model thresholds should be -- each use case requires a different set of thresholds.
+   - Also, note that if you set your model to Production, then you will be able to perform a Drift evaluation. This requires another dataset called the payload dataset, which is typically shorter than the feedback one but similarly has synthetic data in it. Drift will track whether or not your model degrades over time.
+9. Once deploying and evaluation the models on the watsonx.ai platform, you will be able to view your models in OpenScale where additional metrics regarding quality and model health will be shared. Within OpenScale, you can also perform various evaluations on your models and readjust thresholds.
+
+---
+
+## Assistant Integration
+
+### Create Custom Extension
+
+1. Within the watsonx Orchestrate instance, navigate to the sidebar and go to the header "AI Assistant Builder"
+2. Once you've entered the AI Assistant Builder, navigate to the sidebar and go to the header "Integrations"
+3. Under the "Extensions" tab, click on "Build custom extension" so that you can create a custom extension for watsonx.gov in your assistant.
+   - Name the extension something descriptive. When it asks for the OpenAPI Spec, you can either create your own OpenAPI Spec, or utilize the one that we provide, located [here](assets/openAPI_specs/watsonx_Discovery/governance_openapi_spec.json).
+4. Once you've created the extension, you need to add it to the assistant by clicking the "Add +" button on the Integrations homepage.
+   - Click on Next, then click OAuth authentication. To create an API Key, please go to IBM Cloud at this [link](https://cloud.ibm.com/iam/apikeys) then create a new API key and paste it into where it asks for an API key.
+
+### Assistant Action Configuration
+
+1. To then utilize the extension that you've just created, go to the Actions tab on the sidebar of the Assistant. Create a new action for the Assistant where you want to utilize the extension.
+2. Under the step that you want to utilize the extension, in the "And then" section, click on "Use an extension" and choose the extension that you just created. Click on the operation "Get the predictions" and be sure to click on "Apply" for the **wml_deployment_id, version, and query text** variables.
+   - To get the _wml_deployment_id_, go to your cloud environment, underneath Deployments, click on your Deployment Space, then on the right-hand side where it says "About this deployment," under "Deployment Details," copy the Deployment ID.
+   - For the _query_text_ variable, this should be filled with the input that you want to send to the model.
+3. Congratulations, you've successfully integrated a custom extension!
+
+### Retrieve Relevant watsonx.gov Metadata
+
+1. Within the watsonx Orchestrate instance, navigate to the sidebar and go to the header "AI Assistant Builder"
+2. Once you've entered the AI Assistant Builder, navigate to the sidebar and go to the header "Assistant"
+3. Go to the action where you utilize the custom extension (the action that you built in the last section). Navigate to the conversation step where you added "Use an extension" then click on "New Step +" to add a step after this extension.
+4. In that new step, set a new variable to a new expression. Call the new variable anything you want, but something descriptive. In the expression free text space, type in something like this:
+   ```${step_001_result_1}.body.results[0].generated_text```
+   :::note
+   - Instead of step_001 though, please replace with the specific step number of the previous step where you called the extension. To find this step number, go to the step before where you called the extension, go to the URL and all the way at the right, it should say the step number. Copy that step number and replace the step_001 with it.
+   - Also, make sure to put the step\_#_result_1 in curly brackets.
+   :::
+5. Great, now you can use this variable in any of your "Assistant says" sections to depict the model's response in the Assistant response.

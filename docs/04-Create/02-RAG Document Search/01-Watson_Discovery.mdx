@@ -1,0 +1,80 @@
+---
+title: Watson Discovery
+sidebar_position: 1
+description: How to setup RAG with Watson Discovery
+custom_edit_url: null
+---
+
+## Overview
+<div style={{ borderBottom: '1px solid #000', marginTop: '20px', marginBottom: '20px' }}></div>
+
+:::warning
+    Prerequisite: [Watson Disovery Software Requirement](/Prepare/Requirements#watson-discovery)
+:::
+
+This build consists of three main components:
+1. [Setup Watson Discovery](#1-setup-watson-discovery)
+2. [Create Watsonx and Watson Discovery Extensions](#2-create-watsonx-and-watson-discovery-extensions)
+    1. [Create Watson Discovery custom extension](#21-create-watson-discovery-custom-extension)
+    2. [Create Watsonx custom extension](#22-create-watsonx-custom-extension)
+    3. [Integrate Watsonx Search using Watson Discovery to Assistant](#23-integrate-watsonx-search-using-watson-discovery-to-assistant)
+3. [Setup Watson Assistant](#3-setup-watson-assistant)
+
+--------
+### 1. Setup Watson Discovery
+
+1. New projects, input Project Name, select an option "None of the above — I’m working on a custom project", click "Next"
+2. select the appropriatae method of upload, click "Next"
+3. Input Collection Name
+4. Upper left Hamburger icon -> Manage Collections -> New collections
+5. Select data source
+6. If webcrawl, input url links to "Starting URLs" and click "Add" -> Finish
+--------
+### 2. Create Watsonx and Watson Discovery Extensions
+**Required Steps:**
+
+#### **2.1 Create Watson Discovery custom extension**
+1. In your assistant, navigate to "Integrations" page. 
+2. Click "Build custom extensions" -> click "Next" -> Input Extension name `Watson Discovery` -> click "Next"
+3. download json file: [watson-discovery-query-openapi.json](https://github.com/watson-developer-cloud/assistant-toolkit/blob/master/integrations/extensions/starter-kits/watson-discovery/watson-discovery-query-openapi.json) and import file to WA
+4. click "Next" -> click "Finish"
+5. Lower Right corner of the Watson Disovery extension, click "Add" -> click "Add" -> click "Next"
+6. In Authentication page, in the Authentication type dropdown, select "Basic auth"
+    1. For Username enter `apikey`
+    2. For password, create and copy a new API key from [API key](https://cloud.ibm.com/iam/apikeys)
+    3. For discovery_url, within IBM Cloud -> resource list -> Watson Discovery Instance -> Manage -> Credentials -> URL
+    4. Paste URL into discovery_url and remove `https://` from the beginning of the string
+7. Click "Next", click "Finish", click "Close"
+
+- Reference: [starter kit for accessing the IBM Watson Discovery v2 search API via a custom extension to IBM Watson Assistant](https://github.com/watson-developer-cloud/assistant-toolkit/tree/master/integrations/extensions/starter-kits/watson-discovery)
+
+#### **2.2 Create Watsonx custom extension**
+1.  In your assistant, navigate to Integrations page, click "Build custom extension" -> click "Next" -> Input Extension name `watsonx` -> click "Next" .
+2. download json file: [watsonx-openapi.json](https://github.com/watson-developer-cloud/assistant-toolkit/blob/master/integrations/extensions/starter-kits/language-model-watsonx/watsonx-openapi.json) and import file to WA
+3. click "Next" -> click "Finish"
+4. Lower Right corner of the watsonx extension, click "Add" -> click "Add" -> click "Next"
+5. In Authentication page, in the Authentication type dropdown, select "OAuth 2.0"
+    1. For Apikey, create and copy a new API key from [API key](https://cloud.ibm.com/iam/apikeys)
+6. Click "Next", click "Finish", click "Close"
+
+#### **2.3 Integrate Watsonx Search using Watson Discovery to Assistant**
+##### Upload Actions:
+1. Download [discovery-watsonx-actions.json](https://github.com/watson-developer-cloud/assistant-toolkit/blob/master/integrations/extensions/starter-kits/language-model-conversational-search/discovery-watsonx-actions.json)
+2. Navigate to "Actions" page, click "Global Settings" icon on the upper right corner
+3. Navigate to Upload/Download tab, upload the downloaded JSON file [discovery-watsonx-actions.json](https://github.com/watson-developer-cloud/assistant-toolkit/blob/master/integrations/extensions/starter-kits/language-model-conversational-search/discovery-watsonx-actions.json) onto the tab or click to select a file from your local system, then click "Upload", and "Uplaod and replace".
+4. within the Actions page, navigate to "Actions / Variables / Created by you". Set `discovery_project_id` and `watsonx_project_id` session variable
+    :::info
+    **Where to get credentials**
+    - **discovery_project_id**: within Watson Discovery: Upper left Hamburger icon -> Integrate and deploy -> API Information
+    - **watsonx_project_id**: 
+        - Go to [WatsonX Platform](https://dataplatform.cloud.ibm.com/wx/home?context=wx)
+        - Projects (click on project)-> Manage -> General -> Details -> Project ID
+    :::
+
+##### No action matches Setup
+1. Navigate to "All items" -> "Set by assistant" -> "No action matches".
+2. Click on the "No action matches" action and delete the existing step 1 and step 2. 
+3. "New Step". In the "And then" section, select "go to a subaction"  -> select "Search" in the dropdown options -> "Apply".
+4. "Save" and "Close"
+5. You're all set. Navigate to "Preview" to test the integration!
+--------

@@ -1,0 +1,112 @@
+---
+title: IBM Security Verify
+sidebar_position: 1
+description: Integrating IBM Security Verify into Watsonx Assistant
+custom_edit_url: null
+---
+
+# IBM Security Verify Integration
+
+:::warning
+    Prerequisite: [IBM Security Verify Software Requirement](/Prepare/Requirements#user-authentication)
+:::
+
+This section will go over how to setup IBM Security Verify and integrate it with Watsonx Assistant to verify users, authenticate using a one time password (OTP)
+, and reset passwords.
+
+## Setting up IBM Security Verify
+<div style={{ borderBottom: '1px solid #000', marginTop: '20px', marginBottom: '20px' }}></div>
+
+### Create Users and Groups
+1. Login into the dedicated IBM Security Verify instance
+2. Click on the user profile in the top right corner and select "Switch to admin"
+3. In the sidebar, navigate to "Directory" -> "Users and Groups"
+4. Select "Add User+" and fill out the necessary fields.
+    :::note
+        - Provide an email you have access to for each added user.
+        - Make sure to "View extended profile" to fill out the other fields if applicable
+    :::
+5. Navigate to the "Groups" tab and select "Add Group" and fill out the required fields and assign the appropriate users.
+
+### Create API Client
+1. Login into the dedicated IBM Security Verify instance
+2. Click on the user profile in the top right corner and select "Switch to admin"
+3. In the sidebar, navigate to "Security" -> "API Access"
+4. Select "Add API Client +"
+5. Fill out the necessary fields and save the "Client ID" and "Client Secret" values for later reference
+## Assistant Custom Extension
+<div style={{ borderBottom: '1px solid #000', marginTop: '20px', marginBottom: '20px' }}></div>
+
+Before jumping to the custom watsonx assistant we created for IBM Security Verify, it would be prudent to explore the included postman collection for the Verify API. Because of the way that watsonx assistant handles json arrays (or to be more specific, doesn't handle json arrays), you will need to manually set some of the inputs in case they are arrays. Making API calls using the postman collection makes this process quite a bit easier.
+
+### Identify OpenAPI spec values
+Three values will be needed to connect to IBM Security Verify:
+* verify instance url
+* client_id
+* client_secret
+
+The client_id and client_secret will need to be for a corresponding admin account.
+TODO: Add instructions for getting these values
+
+
+### Create the Custom Extension
+1. Navigate and download the OpenAPI spec for another assistant bot [here](https://github.ibm.com/ibm-client-engineering/solution-watsonx-orchestrate/tree/main/assets/openAPI_specs/IBM%20Verify/Verify_Spec_V3.json)
+2. Modify the server url at line 10 with the ```service instance url``` from step 3 [here](#identify-openapi-spec-values)
+3. Navigate to the integrations section within the Assistant Builder sidebar
+4. Select "Build custom extension" and name the extension
+5. Upload the OpenApi spec from step 1 and press "Finish"
+6. Select "Add+" within the newly configured extension
+7. Select "Next" and update values:
+    * Authentication type: Oauth 2.0
+    * Client ID: client_id
+    * Client Secret: client_secret
+
+
+### Action Integration
+This extension has 3 features with 4 api calls total
+
+1. [Verify username and password](#verify-a-username-and-password)
+2. [Authenticate using a OTP](#authenticate-using-a-one-time-password-(otp)) (has two api calls)
+3. [Reset Password](#reset-password)
+
+#### **Verify a Username and Password**
+1. Within the appropriate action, create a step and under "And then" select "Use an extension"
+2. Select the appropriate subordinate bot extension made [here](#create-the-custom-extension)
+3. Select the Operation as "verify user and pass"
+4. Set the Parameters to:
+    * **returnUserRecord**: *true* or *false* depending on if you want the user data to be returned
+    * **Accept**: \*/\* see the note below
+    * **schemas**: *["urn:ietf:params:scim:schemas:ibm:core:2.0:AuthenticateUser"]* see the note below
+    * **userName**: The username for the user logging in
+    * **password**: The password for the user logging in
+
+#### **Authenticate using a One Time Password (OTP)**
+1. Create a new step after the step with the "create a session" extension (either in the same action or another)
+2. Under the "And then" Section, select "Use an extension"
+2. Select the appropriate subordinate bot extension made [here](#assistant-custom-extension)
+3. Select the Operation as "Create and email otp transaction"
+4. Set the Parameters to:
+    * **correlation**: any sequence of 4 numbers (these will appear to the verifying user as a sequence before a dash, followed by the actual verification code)
+    * **emailAddress**: The email address to send the verification code to. If **returnUserRecord** is set to true above, the response json will include a list of all of the user's associated emails.
+5. Add a step and prompt the user to input the verification code they recieved less correlation.
+6. Add another extension call in a further step using the "Attempt email OTP verification" Operation
+7. Set the Parameters to:
+    * **trxnid**: body.id from the extension call in step 3/4
+    * **otp**: The user input
+
+#### **Reset Password**
+1. Create a new step after the step with the "create a session" extension (either in the same action or another)
+2. Under the "And then" Section, select "Use an extension"
+2. Select the appropriate subordinate bot extension made [here](#assistant-custom-extension)
+3. Select the Operation as "Change user's password"
+4. Set the Parameters to:
+    * **userid**: The user's verify userid, if **returnUserRecord** is set to true above, the response json will include the user's userid.
+    * **content-type**: *application/scim+json* see this note
+    * **Accept**: \*/\* see the note below
+    * **schemas**: *["urn:ietf:params:scim:api:messages:2.0:PatchOp"]* see the note below
+    * **operations**: ```[{"op":"replace","value": {"password": "new_pass", "urn:ietf:params:scim:schemas:extension:ibm:2.0:Notification":{"notifyType":"EMAIL","notifyPassword": true}}}]``` replace new_pass with the new password you would like, and if you would like to disable email notifications set "notifyPassword" to false. For clarity on why it neeeds to be this way, see the note below
+
+#### A note on schemas, arrays, and watsonx assistant's general quirkiness
+You may have noticed that some of the inputs to these extensions were unusual. Watsonx assistant's goal is to abstract away most of the complicated technical details away from the user so that they can focus on making the chatbot flows that they need. This works well for the most part, but when the user needs to add custom extensions with more complex request or response data formats the system starts to show its cracks. In particular, any input that involves a json array has to be manually typed as an expression, which is what happens for the **schema** inputs above as well as the **operations** input for the reset password action. Additionally, watsonx assistant offers no native method for accessing data in json arrays, so the user must determine the step that an array is receieved and use that to write a custom expression to access array values.
+
+With regards to the **Accept** and **content-type** fields, for whatever reason IBM Security Verify will not work if those values are not set as described. I do not know why this is, but trust me, it is necessary.

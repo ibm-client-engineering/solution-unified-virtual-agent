@@ -1,0 +1,18 @@
+---
+title: Subordinate Bot Integration
+sidebar_position: 5
+description: sample page
+custom_edit_url: null
+---
+
+## Overview
+<div style={{ borderBottom: '1px solid #000', marginTop: '20px', marginBottom: '20px' }}></div>
+
+One aspect of creating a unifying platform is the ability to connect and interface with existing chatbots which may have their own data corpuses or access policies. The parent or unifying agent should be able to hand-off requests to the relevant chatbots. 
+For example, if there is an existing chatbot which has access to financial analyst reports data source, the parent/unifying bot should be able to hand-off questions to that chatbot's domain and return it back to the user in the parent bot.
+
+## Solution Implementation
+<div style={{ borderBottom: '1px solid #000', marginTop: '20px', marginBottom: '20px' }}></div>
+To implement this capability another assistant is required either with watsonx Assistant or within the assistant builder in watsonx Orchestrate. There are two ways to configure this solution:
+1. [Assistant Custom Extension](/Create/Subordinate%20Bots/assistant_custom_extension)
+2. [watsonx Orchestrate Skill Flow](/Create/Subordinate%20Bots/watsonx_orchestrate)

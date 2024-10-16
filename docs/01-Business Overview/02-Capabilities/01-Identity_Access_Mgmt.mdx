@@ -1,0 +1,45 @@
+---
+title: Identity and Access Management
+sidebar_position: 1
+description: sample page
+custom_edit_url: null
+---
+
+## Overview
+<div style={{ borderBottom: '1px solid #000', marginTop: '20px', marginBottom: '20px' }}></div>
+It is essential to consider the security and access control aspects for the user interface within the agent. Implementing user login functionality allows users to securely authenticate themselves, enabling them to access specific actions and features based on their access rights. By integrating user access information with the chatbot, the system can ensure that users can only interact with and modify data they are authorized to access. This not only enhances the overall security of the system but also provides a more personalized and controlled user experience.
+
+For instance, a user with administrative privileges may have access to change theirs' and others' passwords , while a regular user will be limited to basic functions. 
+This approach ensures that users are only exposed to the features and actions they are qualified to perform, reducing the risk of errors and improving the usability of the chatbot.
+
+### **Examples**
+
+For this solution there was a focus on four simulated personas.
+
+![User Examples](https://media.github.ibm.com/user/386696/files/f08aec9d-0c3a-4984-8903-8f499ec14a42)
+
+**Admin** : Has the ability to change passwords
+
+**Manager** : Has the ability to file short-term disablity requests for oneself and others
+
+**Employees** : Has the ability to search corpus for answers and open tickets to change passwords or open short-term disablity requests
+
+**fixed-income access** : Has the ability to search documents pertaining to fixed-income reports
+
+**real-estate access** : Has the ability to search documents pertaining to real-estate reports
+
+## Solution Implementation
+<div style={{ borderBottom: '1px solid #000', marginTop: '20px', marginBottom: '20px' }}></div>
+
+### **Method 1: Simulation**
+Simulating user login within Watsonx Orchestrate Assistant Builder can be achieved by storing simulated individuals in a data structure. This data structure, typically a list or map, can store information about each simulated user, such as their name, access level, and other relevant details. By initializing this data structure with a set of simulated users, you can create a realistic login scenario where the system checks user credentials and grants or denies access accordingly.
+
+Storing simulated individuals in a data structure within Watsonx Orchestrate Assistant Builder allows you to test the login functionality and ensure that the system behaves as expected. This can help identify potential issues early in the development process, saving time and resources. Additionally, you can customize the simulated users' data to represent different user types, enabling you to test the system's access control mechanisms and ensure that users are only granted access to the appropriate actions and data.
+
+By using simulated users in this manner, you can thoroughly test the user login functionality and ensure that the unified agent with generative AI capabilities is secure, reliable, and user-friendly.
+
+[Implementation Guide Here](/Create/Identity%20and%20Access%20Management/Simulated)
+### **Method 2: IBM Security Verify**
+Leverage the IBM Security Verify API to carry differnt actions like authenticating user logins and resetting passwords.
+
+[Implementation Guide Here](/Create/Identity%20and%20Access%20Management/IBM_Security_Verify)
