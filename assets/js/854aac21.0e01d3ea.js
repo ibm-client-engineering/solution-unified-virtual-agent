@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwebsite=self.webpackChunkwebsite||[]).push([[2563],{509:e=>{e.exports=JSON.parse('{"permalink":"/solution-unified-virtual-agent/flight-logs/tags/sprint","page":1,"postsPerPage":1,"totalPages":1,"totalCount":1,"blogDescription":"Blog","blogTitle":"Flight Logs"}')}}]);
