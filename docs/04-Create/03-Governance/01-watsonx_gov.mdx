@@ -26,12 +26,7 @@ This portion of the Create tab will walk you through how to create and integrate
      - OPTIONAL: It might be beneficial to create a Pre-Production and a Post-Production deployment for the same model. This is beneficial because at different stages of deployments, there are different metrics unlocked in order to showcase the attributes of the model.
 5. Now in the Deployment Space underneath the _Assets_ tab, click again on the vertical 3 dots --> "Deploy" button.
 6. Once you have deployed, the page will bring you to all of your _Deployments_, click into the model that you would like to Evaluate. Next, click on the header "Evaluations" then click the "Evaluate" button. At this point, it is now time to evaluate your models under the _Evaluate_ tab, but a pre-requisite is to have some sort of feedback dataset with pre-generated inputs and outputs of what you want your model to spit out in an ideal situation. That way, the model can then evaluate its results against this dataset.
-   - If you do not have this dataset, an easy way to create it is to utilize LLMs to create synthetic data. Or you can utilize one that we have provided for you:
-     - [query_actions_feedback.csv](../../../assets/governance_assets/query_actions_feedback.csv)
-     - [IndividualvsOther_feedback.csv](../../../assets/governance_assets/IndividualVsOther.csv)
-     - [IndividualvsOther_self_feedback.csv](../../../assets/governance_assets/IndividualVsOther_self.csv)
-     - [financialVsOther_ground_truth_feedback.csv](../../../assets/governance_assets/financialVsOther_ground_truth.csv)
-     - [Extract_references.csv](../../../assets/governance_assets/Extract_references.csv)
+   - If you do not have this dataset, an easy way to create it is to utilize LLMs to create synthetic data.
 7. Once you have your feedback dataset, once you have clicked the "Evaluate" button, under the header "Select text data," upload your feedback dataset.
 8. The model will likely take a few minutes to evaluate, but once it has, in the _Actions_ tab, feel free to adjust parameters depending on what you feel your model thresholds should be -- each use case requires a different set of thresholds.
    - Also, note that if you set your model to Production, then you will be able to perform a Drift evaluation. This requires another dataset called the payload dataset, which is typically shorter than the feedback one but similarly has synthetic data in it. Drift will track whether or not your model degrades over time.
