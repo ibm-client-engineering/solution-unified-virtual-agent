@@ -13,15 +13,15 @@ custom_edit_url: null
 :::
 
 This build consists of three main components:
-1. [Setup Watson Discovery](#1-setup-watson-discovery)
-2. [Create Watsonx and Watson Discovery Extensions](#2-create-watsonx-and-watson-discovery-extensions)
-    1. [Create Watson Discovery custom extension](#21-create-watson-discovery-custom-extension)
-    2. [Create Watsonx custom extension](#22-create-watsonx-custom-extension)
-    3. [Integrate Watsonx Search using Watson Discovery to Assistant](#23-integrate-watsonx-search-using-watson-discovery-to-assistant)
+1. [Setup watson Discovery](#1-setup-watson-discovery)
+2. [Create watsonx and Watson Discovery Extensions](#2-create-watsonx-and-watson-discovery-extensions)
+    1. [Create watson Discovery custom extension](#21-create-watson-discovery-custom-extension)
+    2. [Create watsonx custom extension](#22-create-watsonx-custom-extension)
+    3. [Integrate watsonx Search using Watson Discovery to Assistant](#23-integrate-watsonx-search-using-watson-discovery-to-assistant)
 3. [Setup Watson Assistant](#3-setup-watson-assistant)
 
 --------
-### 1. Setup Watson Discovery
+### 1. Setup watson Discovery
 
 1. New projects, input Project Name, select an option "None of the above — I’m working on a custom project", click "Next"
 2. select the appropriatae method of upload, click "Next"
@@ -30,10 +30,10 @@ This build consists of three main components:
 5. Select data source
 6. If webcrawl, input url links to "Starting URLs" and click "Add" -> Finish
 --------
-### 2. Create Watsonx and Watson Discovery Extensions
+### 2. Create watsonx and watson Discovery Extensions
 **Required Steps:**
 
-#### **2.1 Create Watson Discovery custom extension**
+#### **2.1 Create watson Discovery custom extension**
 1. In your assistant, navigate to "Integrations" page. 
 2. Click "Build custom extensions" -> click "Next" -> Input Extension name `Watson Discovery` -> click "Next"
 3. download json file: [watson-discovery-query-openapi.json](https://github.com/watson-developer-cloud/assistant-toolkit/blob/master/integrations/extensions/starter-kits/watson-discovery/watson-discovery-query-openapi.json) and import file to WA
@@ -48,7 +48,7 @@ This build consists of three main components:
 
 - Reference: [starter kit for accessing the IBM Watson Discovery v2 search API via a custom extension to IBM Watson Assistant](https://github.com/watson-developer-cloud/assistant-toolkit/tree/master/integrations/extensions/starter-kits/watson-discovery)
 
-#### **2.2 Create Watsonx custom extension**
+#### **2.2 Create watsonx custom extension**
 1.  In your assistant, navigate to Integrations page, click "Build custom extension" -> click "Next" -> Input Extension name `watsonx` -> click "Next" .
 2. download json file: [watsonx-openapi.json](https://github.com/watson-developer-cloud/assistant-toolkit/blob/master/integrations/extensions/starter-kits/language-model-watsonx/watsonx-openapi.json) and import file to WA
 3. click "Next" -> click "Finish"
@@ -57,7 +57,7 @@ This build consists of three main components:
     1. For Apikey, create and copy a new API key from [API key](https://cloud.ibm.com/iam/apikeys)
 6. Click "Next", click "Finish", click "Close"
 
-#### **2.3 Integrate Watsonx Search using Watson Discovery to Assistant**
+#### **2.3 Integrate watsonx Search using Watson Discovery to Assistant**
 ##### Upload Actions:
 1. Download [discovery-watsonx-actions.json](https://github.com/watson-developer-cloud/assistant-toolkit/blob/master/integrations/extensions/starter-kits/language-model-conversational-search/discovery-watsonx-actions.json)
 2. Navigate to "Actions" page, click "Global Settings" icon on the upper right corner
@@ -67,7 +67,7 @@ This build consists of three main components:
     **Where to get credentials**
     - **discovery_project_id**: within Watson Discovery: Upper left Hamburger icon -> Integrate and deploy -> API Information
     - **watsonx_project_id**: 
-        - Go to [WatsonX Platform](https://dataplatform.cloud.ibm.com/wx/home?context=wx)
+        - Go to [watsonX Platform](https://dataplatform.cloud.ibm.com/wx/home?context=wx)
         - Projects (click on project)-> Manage -> General -> Details -> Project ID
     :::
 
