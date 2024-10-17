@@ -74,7 +74,7 @@ Session variables are an important tool for storing information within and betwe
 
 If you need to pass more information than just the input query to the subordinate bot, a session variable is the way to go. To do this, the session variable must already be defined on the subordinate side before its value can be updated by a dialog request. Once the variable is defined, it can be updated by including its name along with a new value in a json object under the **useContext.skills.actions skill.skill_variables** field.
 
-## Watsonx Orchestrate Skill
+## watsonx Orchestrate Skill
 <div style={{ borderBottom: '1px solid #000', marginTop: '20px', marginBottom: '20px' }}></div>
 This section will cover how the bot-bot communication OpenAPI spec was adapted for use by watsonx orchestrate. The example file can be found [here](https://github.ibm.com/ibm-client-engineering/solution-watsonx-orchestrate/tree/main/assets/openAPI_specs/otherBot/wxo_otherBot_v2_OAS.yaml). The setup instructions for the specification itself are the same as for the watsonx assistant spec.
 

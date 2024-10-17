@@ -5,9 +5,9 @@ description: How to setup RAG with Watsonx Discovery
 custom_edit_url: null
 ---
 
-# Watsonx Discovery
+# watsonx Discovery
 :::warning
-    Prerequisite: [Watsonx Disovery Software Requirement](/Prepare/Requirements#watsonx-discovery)
+    Prerequisite: [watsonx Disovery Software Requirement](/Prepare/Requirements#watsonx-discovery)
 :::
 
 ## Build setup
@@ -197,7 +197,7 @@ The `2-deploy-rag-function-in-wml` notebook in the project handles the deploymen
 
 ### **Assistant Integration**
 
-Watsonx Assistant provides the query interface, using either:
+watsonx Assistant provides the query interface, using either:
 
 - [Custom Extension for RAG Deploment Configuration](#deploy-rag-function-in-watson-machine-learning)
   :::tip
@@ -261,7 +261,7 @@ Dependent Steps: [Assistant Integration](#assistant-integration)
 
 #### **Assistant Action Integrationn**
 
-1. Within the appropriate action step select "And then" option as "Use an extension" and select the appropriate Watsonx Discovery extension
+1. Within the appropriate action step select "And then" option as "Use an extension" and select the appropriate watsonx Discovery extension
 2. For "Operation" select "Get the predications"
 3. For the "Parameters" set:
    - input_data: Expression type as `[{"fields": ["Text"],"values": [[input.text]]}]`
