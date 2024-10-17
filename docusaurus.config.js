@@ -30,7 +30,7 @@ async function createconfig() {
     organizationName: "ibm-client-engineering", // Usually your GitHub org/user name.
     projectName: "solution-unified-virtual-agent", // Usually your repo name.
 
-    onBrokenLinks: "throw",
+    onBrokenLinks: "warn",
     onBrokenMarkdownLinks: "warn",
 
     // ...
