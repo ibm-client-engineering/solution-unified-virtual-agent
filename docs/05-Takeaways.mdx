@@ -1,7 +1,25 @@
 ---
 title: Takeaways
-description: Learnings from this watsonx Assistant pilot
+description: Learnings from this watsonx Orchestrate pilot
 custom_edit_url: null
 sidebar_position: 4
 ---
+
+The solution leverages watsonx Orchestrate to govern LLM-driven workflows and create a dynamic, unified chatbot experience. By integrating this orchestration layer, we can effectively manage interactions, automate decision-making processes, and route users to the appropriate workflows. This approach not only streamlines the user experience but also ensures that AI-driven actions are consistently monitored and optimized for performance, compliance, and security. The combination of LLMs with watsonx Orchestrate provides an adaptable and scalable chatbot solution capable of evolving with the needs of the business.
+
+## Best Practices
+-----
+
+### **Leverage LLMs as Workflow Routing Tools**
+
+Large Language Models (LLMs) serve as powerful tools for intelligently routing users to defined workflows, including those that involve third-party applications like ServiceNow or Workday. By configuring the chatbot to leverage the strengths of LLMs, we can enhance the user experience, ensuring that interactions are seamlessly guided to the appropriate business processes, tasks, or even mediated conversations with other chatbots. This creates a dynamic and personalized response system that integrates with a variety of enterprise tools, all based on user inputs.
+
+### **Focused Retrieval-Augmented Generation (RAG)**
+To ensure that the chatbot only retrieves and processes relevant information, we implemented an AI-driven approach for RAG that identifies the right data indexes. This allows us to narrow the scope of retrieval to what's most pertinent, making the interaction more efficient and contextually relevant.
+
+### **Govern LLM Workflows**
+Ensuring governance over AI-driven workflows is critical to maintaining performance and compliance. With watsonx.governance, we established mechanisms to monitor the lifecycle of LLMs used within the chatbot, tracking key metrics such as bias, accuracy, drift, and overall model health. This ensures transparency and trustworthiness in all chatbot operations.
+
+### **Securing the Chatbot with Identity and Access Management (IAM)**
+Security is paramount in a unified chatbot solution. By implementing IAM protocols and leveraging methods like two-factor authentication (2FA), we ensure that only authorized users can access sensitive workflows. This approach protects user data and ensures that interactions are secure and compliant with organizational policies.
 
