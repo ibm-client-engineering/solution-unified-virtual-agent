@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwebsite=self.webpackChunkwebsite||[]).push([[1545],{5539:s=>{s.exports=JSON.parse('{"label":"sprint","permalink":"/solution-unified-virtual-assistant/flight-logs/tags/sprint","allTagsPath":"/solution-unified-virtual-assistant/flight-logs/tags","count":1,"unlisted":false}')}}]);
