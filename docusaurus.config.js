@@ -22,13 +22,13 @@ async function createconfig() {
     url: "https://ibm-client-engineering.github.io",
     // Set the /<baseUrl>/ pathname under which your site is served
     // For GitHub pages deployment, it is often "/<projectName>/"
-    baseUrl: "/solution-unified-virtual-agent",
+    baseUrl: "/solution-unified-virtual-assistant",
 
 
     // GitHub pages deployment config.
     // If you aren"t using GitHub pages, you don"t need these.
     organizationName: "ibm-client-engineering", // Usually your GitHub org/user name.
-    projectName: "solution-unified-virtual-agent", // Usually your repo name.
+    projectName: "solution-unified-virtual-assistant", // Usually your repo name.
 
     onBrokenLinks: "warn",
     onBrokenMarkdownLinks: "warn",
@@ -147,7 +147,7 @@ async function createconfig() {
             // },
             {to: "flight-logs", label: "Flight Logs", position: "right"},
             {
-              href: "https://github.com/ibm-client-engineering/solution-unified-virtual-agent",
+              href: "https://github.com/ibm-client-engineering/solution-unified-virtual-assistant",
               className: "header-github-link",
               position: "right",
             },
