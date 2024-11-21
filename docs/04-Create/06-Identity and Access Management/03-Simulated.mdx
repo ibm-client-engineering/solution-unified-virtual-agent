@@ -46,7 +46,8 @@ This section will go through how to simulate User and Access Management for an A
     ``` !(( [users variable from "Variable Creation" step above]).filter("user", "user.name ==  [current_user value]")).isEmpty()) ```
 
     Example)
-    <img src="https://media.github.ibm.com/user/386696/files/0ef0a124-c844-489c-aa12-c478734b5ce5" alt="Valid User Assistant Example" width="500"/>
+    
+    ![Valid User Example](../../../static/img/valid_user_example.png)
 
 
 2. Ensure valid password by creating conditional statement with expression value of :
@@ -54,7 +55,8 @@ This section will go through how to simulate User and Access Management for an A
     ``` [current_password value] == (users.filter("user", "user.name == [current_user value]"))[0].password  ```
 
     Example)
-    <img src="https://media.github.ibm.com/user/386696/files/30d212c3-063e-43e9-ad90-abc933f35e52" alt="Valid Password Assistant Example" width="600"/>
+
+   ![Valid Password Example](../../../static/img/valid_pass_example.png)
 
 #### **Change User's Password**
 1. Set a new password for the current user with an expression like:
