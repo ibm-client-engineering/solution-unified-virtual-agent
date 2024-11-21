@@ -79,7 +79,7 @@ async function createconfig() {
             // Please change this to your repo.
             // Remove this to remove the "edit this page" links.
             editUrl:
-              "https://github.com/ibm-client-engineering/solution-unified-virtual-agent/tree/main/packages/create-docusaurus/templates/shared/",
+              "https://github.com/ibm-client-engineering/solution-unified-virtual-assistant/tree/main/packages/create-docusaurus/templates/shared/",
           },
           theme: {
             customCss: require.resolve("./src/css/custom.css"),
@@ -91,7 +91,7 @@ async function createconfig() {
             // editUrl: "https://github.com/facebook/docusaurus/edit/main/website/",
             // Advanced use-case: functional editUrl
             editUrl: ({ locale, blogDirPath, blogPath, permalink }) =>
-              "https://github.com/ibm-client-engineering/solution-unified-virtual-agent/edit/main/${blogDirPath}/${blogPath}",
+              "https://github.com/ibm-client-engineering/solution-unified-virtual-assistant/edit/main/${blogDirPath}/${blogPath}",
             blogTitle: "Flight Logs",
             blogSidebarTitle: "Flight Logs",
             blogSidebarCount: 'ALL',
